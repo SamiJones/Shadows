@@ -82,7 +82,7 @@ FragmentOutputPacket main(FragmentInputPacket v) {
 
 	//Initialise returned colour to ambient component
 	float3 colour = baseColour.xyz* lightAmbient;
-
+		float3 ambonly = colour;
 	// Calculate the lambertian term (essentially the brightness of the surface point based on the dot product of the normal vector with the vector pointing from v to the light source's location)
 	float3 lightDir = -lightVec.xyz; // Directional light
 	if (lightVec.w == 1.0) lightDir =lightVec.xyz - v.posW; // Positional light
@@ -106,16 +106,10 @@ FragmentOutputPacket main(FragmentInputPacket v) {
 	if (v.posSdw.x < 1 && v.posSdw.x>0 && v.posSdw.y < 1 && v.posSdw.y>0)
 		depthShadowMap = shadowMap.Sample(linearSampler, v.posSdw.xy).r;
 
-	if (v.posSdw.z < (depthShadowMap + 0.0001))
+	if (v.posSdw.z < (depthShadowMap + 0.00001))
 		outputFragment.fragmentColour = float4(colour, baseColour.a);
 	else
-		outputFragment.fragmentColour = float4(0, 0, 0, 1);
-
-	/*float col = shadowMap.Sample(linearSampler, v.texCoord).r;
-	outputFragment.fragmentColour = float4(col, col, col, 1.0);*/
-
-	//outputFragment.fragmentColour = myTexture.Sample(linearSampler, v.texCoord);
-	//outputFragment.fragmentColour = shadowMap.Sample(linearSampler, v.texCoord);
+		outputFragment.fragmentColour = float4(ambonly, 1);
 
 	return outputFragment;
 

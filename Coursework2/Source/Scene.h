@@ -96,9 +96,7 @@ class Scene : public GUObject {
 
 	
 	//Camera
-	//FirstPersonCamera						*mainCamera = nullptr;
 	LookAtCamera						*mainCamera = nullptr;
-	//FirstPersonCamera						*lightCamera = nullptr;
 	LookAtCamera						*lightCamera = nullptr;
 
 	XMFLOAT4 lightVec = XMFLOAT4(-250.0, 130.0, 145.0, 1.0);
@@ -109,6 +107,9 @@ class Scene : public GUObject {
 
 	//Used for applying a user-defined translation to the reflective sphere in updateScene()
 	DirectX::XMMATRIX						sphereTranslationMatrix = XMMatrixIdentity();
+	
+	//used for rotating entire scene to display dynamic shadows
+	DirectX::XMMATRIX						sceneRotationMatrix = XMMatrixIdentity();
 
 	//
 	// Private interface
@@ -174,8 +175,7 @@ public:
 	HRESULT LoadShader(ID3D11Device *device, const char *filename, char **PSBytecode, ID3D11PixelShader **pixelShader);
 	uint32_t LoadShader(ID3D11Device *device, const char *filename, char **VSBytecode, ID3D11VertexShader **vertexShader);
 	HRESULT initialiseSceneResources();
-	HRESULT updateScene(ID3D11DeviceContext *context);
-	HRESULT updateSceneShadow(ID3D11DeviceContext *context);
+	HRESULT updateScene(ID3D11DeviceContext *context, LookAtCamera* camera);
 	HRESULT buildShadowTransform();
 	HRESULT renderScene();
 	HRESULT renderObjects(ID3D11DeviceContext* context);
